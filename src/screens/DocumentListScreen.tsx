@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert, Platform } from 'react-native';
-import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
@@ -10,7 +9,6 @@ import { Colors } from '../constants/Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 type DocumentListScreenRouteProp = RouteProp<RootStackParamList, 'DocumentList'>;
-type DocumentListNavigationProp = StackNavigationProp<RootStackParamList, 'DocumentList'>;
 
 interface DocumentInfo {
     id: string;
@@ -22,7 +20,6 @@ interface DocumentInfo {
 
 export default function DocumentListScreen() {
     const route = useRoute<DocumentListScreenRouteProp>();
-    const navigation = useNavigation<DocumentListNavigationProp>();
     const { courseCode, courseTitle, documents } = route.params;
     const [documentInfos, setDocumentInfos] = useState<DocumentInfo[]>([]);
     const [loading, setLoading] = useState(true);
@@ -110,14 +107,6 @@ export default function DocumentListScreen() {
         }
     };
 
-    const handleView = (doc: DocumentInfo) => {
-        navigation.navigate('DocumentViewer', {
-            courseCode,
-            documentName: doc.name,
-            fileSource: doc.fileSource,
-        });
-    };
-
     const renderDocument = ({ item }: { item: DocumentInfo }) => (
         <View style={styles.documentCard}>
             <View style={styles.documentHeader}>
@@ -130,32 +119,21 @@ export default function DocumentListScreen() {
                 </View>
             </View>
 
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style={[styles.button, styles.viewButton]}
-                    onPress={() => handleView(item)}
-                    activeOpacity={0.7}
-                >
-                    <MaterialCommunityIcons name="eye" size={20} color={Colors.white} />
-                    <Text style={styles.buttonText}>View</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={[styles.button, styles.downloadButton]}
-                    onPress={() => handleDownload(item)}
-                    activeOpacity={0.7}
-                    disabled={downloadingId === item.id}
-                >
-                    {downloadingId === item.id ? (
-                        <ActivityIndicator size="small" color={Colors.white} />
-                    ) : (
-                        <>
-                            <MaterialCommunityIcons name="download" size={20} color={Colors.white} />
-                            <Text style={styles.buttonText}>Download</Text>
-                        </>
-                    )}
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+                style={styles.downloadButton}
+                onPress={() => handleDownload(item)}
+                activeOpacity={0.7}
+                disabled={downloadingId === item.id}
+            >
+                {downloadingId === item.id ? (
+                    <ActivityIndicator size="small" color={Colors.white} />
+                ) : (
+                    <>
+                        <MaterialCommunityIcons name="download" size={20} color={Colors.white} />
+                        <Text style={styles.buttonText}>Download</Text>
+                    </>
+                )}
+            </TouchableOpacity>
         </View>
     );
 
@@ -274,23 +252,13 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#666',
     },
-    buttonContainer: {
-        flexDirection: 'row',
-        gap: 12,
-    },
-    button: {
-        flex: 1,
+    downloadButton: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 12,
         borderRadius: 8,
         gap: 8,
-    },
-    viewButton: {
-        backgroundColor: Colors.secondary,
-    },
-    downloadButton: {
         backgroundColor: Colors.primary,
     },
     buttonText: {

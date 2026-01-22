@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "CS_Library_App",
-    "slug": "CS_Library_App",
+    "slug": "umyu-library",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,17 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.rareplayersorganization.umyulibrary"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "182e0d81-8608-415f-88b8-1d1d75c03457"
+      }
+    },
+    "owner": "rareplayers-organization"
   }
 }
