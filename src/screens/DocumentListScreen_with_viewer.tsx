@@ -91,7 +91,7 @@ export default function DocumentListScreen() {
             // Open with default app
             const fileUrl = `file://${publicPath}`;
             const canOpen = await Linking.canOpenURL(fileUrl);
-            
+
             if (canOpen) {
                 await Linking.openURL(fileUrl);
             } else {
@@ -151,7 +151,7 @@ export default function DocumentListScreen() {
 
                 const destPath = `${RNFS.DocumentDirectoryPath}/${doc.name}`;
                 await RNFS.copyFile(sourcePath, destPath);
-                
+
                 Alert.alert('Success', `"${doc.name}" has been saved to Files app.`);
             }
         } catch (error: any) {
@@ -173,7 +173,7 @@ export default function DocumentListScreen() {
                     <Text style={styles.documentSize}>{item.size}</Text>
                 </View>
             </View>
-            
+
             <View style={styles.buttonContainer}>
                 <TouchableOpacity 
                     style={[styles.actionButton, styles.viewButton]} 
@@ -358,5 +358,5 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#999',
         marginTop: 16,
-    },
+       },
 });
