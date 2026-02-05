@@ -4,20 +4,24 @@
     "slug": "umyu-library",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon.jpg",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/icon.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rareplayersorganization.umyulibrary"
     },
     "android": {
+      "permissions": [
+        "WRITE_EXTERNAL_STORAGE"
+      ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.jpg",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -25,13 +29,23 @@
       "package": "com.rareplayersorganization.umyulibrary"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.jpg"
     },
     "extra": {
       "eas": {
         "projectId": "182e0d81-8608-415f-88b8-1d1d75c03457"
       }
     },
+    "plugins": [
+        [
+          "expo-build-properties",
+          {
+           "android": {
+              "usesCleartextTraffic": true
+            }
+          }
+        ]
+      ],
     "owner": "rareplayers-organization"
   }
 }

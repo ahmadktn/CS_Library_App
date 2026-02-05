@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, FlatList, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, FlatList, Platform, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
@@ -23,7 +23,7 @@ export default function HomeScreen() {
         navigation.navigate('DocumentList', {
             courseCode: course.code,
             courseTitle: course.title,
-            documents: [{ name: course.title, fileSource: course.fileSource }],
+            documents: course.documents,
         });
     };
 
@@ -48,6 +48,20 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
+            {/* Logos Header */}
+            <View style={styles.logoContainer}>
+                <Image 
+                    source={require('../assets/umyu_logo.jpg')} 
+                    style={styles.logo}
+                    resizeMode="contain"
+                />
+                <Image 
+                    source={require('../assets/nacos_logo.jpg')} 
+                    style={styles.logo}
+                    resizeMode="contain"
+                />
+            </View>
+
             <View style={styles.searchContainer}>
                 <MaterialCommunityIcons name="magnify" size={24} color="#666" style={styles.searchIcon} />
                 <TextInput
@@ -107,6 +121,24 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.background,
+    },
+    logoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        backgroundColor: Colors.cardBackground,
+        gap: 30,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 3,
+        elevation: 2,
+    },
+    logo: {
+        width: 80,
+        height: 80,
     },
     content: {
         padding: 20,

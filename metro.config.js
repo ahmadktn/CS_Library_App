@@ -2,9 +2,15 @@ const { getDefaultConfig } = require('expo/metro-config');
 
 const config = getDefaultConfig(__dirname);
 
-config.resolver.assetExts.push(
-    // Adds support for `.txt` files
-    'txt'
-);
+const { resolver } = config;
+
+// Ensure consistent asset handling
+config.resolver.assetExts = [
+    ...resolver.assetExts,
+    'txt',
+    'pdf',
+    'docx',
+    'pptx',
+];
 
 module.exports = config;

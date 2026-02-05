@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert, Platform } from 'react-native';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert, Platform, PermissionsAndroid } from 'react-native';
+import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system/legacy';
-import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
+import * as FileSystemLegacy from 'expo-file-system/legacy';
+import RNFS from 'react-native-fs';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { Colors } from '../constants/Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -20,6 +21,7 @@ interface DocumentInfo {
 
 export default function DocumentListScreen() {
     const route = useRoute<DocumentListScreenRouteProp>();
+    const navigation = useNavigation();
     const { courseCode, courseTitle, documents } = route.params;
     const [documentInfos, setDocumentInfos] = useState<DocumentInfo[]>([]);
     const [loading, setLoading] = useState(true);
@@ -31,18 +33,17 @@ export default function DocumentListScreen() {
                 const infos = await Promise.all(
                     documents.map(async (doc: any, index: number) => {
                         try {
+                            if (!doc.fileSource) return null;
                             const asset = Asset.fromModule(doc.fileSource);
                             await asset.downloadAsync();
                             const uri = asset.localUri || asset.uri;
 
                             let size = 'Unknown';
                             if (Platform.OS !== 'web') {
-                                const fileInfo = await FileSystem.getInfoAsync(uri);
+                                const fileInfo = await FileSystemLegacy.getInfoAsync(uri);
                                 if (fileInfo.exists) {
                                     const sizeInKb = fileInfo.size / 1024;
-                                    size = sizeInKb < 1024
-                                        ? `${sizeInKb.toFixed(2)} KB`
-                                        : `${(sizeInKb / 1024).toFixed(2)} MB`;
+                                    size = sizeInKb < 1024 ? `${sizeInKb.toFixed(2)} KB` : `${(sizeInKb / 1024).toFixed(2)} MB`;
                                 }
                             }
 
@@ -54,25 +55,17 @@ export default function DocumentListScreen() {
                                 localUri: uri,
                             };
                         } catch (error) {
-                            console.error('Error loading document:', error);
-                            return {
-                                id: `${courseCode}-doc-${index}`,
-                                name: doc.name || `Document ${index + 1}`,
-                                fileSource: doc.fileSource,
-                                size: 'Error',
-                                localUri: null,
-                            };
+                            return null;
                         }
                     })
                 );
-                setDocumentInfos(infos);
+                setDocumentInfos(infos.filter(doc => doc !== null) as DocumentInfo[]);
             } catch (error) {
                 console.error('Error loading documents:', error);
             } finally {
                 setLoading(false);
             }
         };
-
         loadDocumentInfos();
     }, [documents, courseCode]);
 
@@ -87,21 +80,57 @@ export default function DocumentListScreen() {
             return;
         }
 
-        if (!(await Sharing.isAvailableAsync())) {
-            Alert.alert('Error', 'Sharing is not available on this device');
-            return;
-        }
-
         try {
             setDownloadingId(doc.id);
-            await Sharing.shareAsync(doc.localUri, {
-                dialogTitle: `Save ${doc.name}`,
-                mimeType: 'text/plain',
-                UTI: 'public.plain-text'
-            });
-        } catch (error) {
-            console.error('Error sharing:', error);
-            Alert.alert('Error', 'Failed to share/save document.');
+
+            if (Platform.OS === 'android') {
+                // Request storage permission
+                const granted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                    {
+                        title: 'Storage Permission',
+                        message: 'App needs access to download files to your device',
+                        buttonPositive: 'OK',
+                    }
+                );
+
+                if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+                    Alert.alert('Permission Denied', 'Storage permission is required to download files.');
+                    return;
+                }
+
+                // Remove file:// prefix if present
+                let sourcePath = doc.localUri;
+                if (sourcePath.startsWith('file://')) {
+                    sourcePath = sourcePath.replace('file://', '');
+                }
+
+                // Destination in Downloads folder
+                const destPath = `${RNFS.DownloadDirectoryPath}/${doc.name}`;
+                
+                console.log('Copying from:', sourcePath);
+                console.log('Copying to:', destPath);
+
+                // Copy file directly to Downloads
+                await RNFS.copyFile(sourcePath, destPath);
+
+                console.log('File saved to Downloads successfully');
+                Alert.alert('Success', `"${doc.name}" has been saved to Downloads folder.`);
+            } else {
+                // iOS: Copy to Documents directory
+                let sourcePath = doc.localUri;
+                if (sourcePath.startsWith('file://')) {
+                    sourcePath = sourcePath.replace('file://', '');
+                }
+
+                const destPath = `${RNFS.DocumentDirectoryPath}/${doc.name}`;
+                await RNFS.copyFile(sourcePath, destPath);
+                
+                Alert.alert('Success', `"${doc.name}" has been saved to Files app.`);
+            }
+        } catch (error: any) {
+            console.error('Download error:', error);
+            Alert.alert('Error', `Failed to download: ${error?.message || 'Unknown error'}`);
         } finally {
             setDownloadingId(null);
         }
@@ -118,22 +147,39 @@ export default function DocumentListScreen() {
                     <Text style={styles.documentSize}>{item.size}</Text>
                 </View>
             </View>
+            
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity 
+                    style={[styles.actionButton, styles.viewButton]} 
+                    onPress={() => {
+                        // @ts-ignore - Navigation will be typed in your app
+                        navigation.navigate('DocumentViewer', {
+                            documentName: item.name,
+                            documentUri: item.localUri
+                        });
+                    }}
+                    activeOpacity={0.7}
+                >
+                    <MaterialCommunityIcons name="eye" size={20} color={Colors.white} />
+                    <Text style={styles.buttonText}>View</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-                style={styles.downloadButton}
-                onPress={() => handleDownload(item)}
-                activeOpacity={0.7}
-                disabled={downloadingId === item.id}
-            >
-                {downloadingId === item.id ? (
-                    <ActivityIndicator size="small" color={Colors.white} />
-                ) : (
-                    <>
-                        <MaterialCommunityIcons name="download" size={20} color={Colors.white} />
-                        <Text style={styles.buttonText}>Download</Text>
-                    </>
-                )}
-            </TouchableOpacity>
+                <TouchableOpacity 
+                    style={[styles.actionButton, styles.downloadButton]} 
+                    onPress={() => handleDownload(item)}
+                    activeOpacity={0.7}
+                    disabled={downloadingId === item.id}
+                >
+                    {downloadingId === item.id ? (
+                        <ActivityIndicator size="small" color={Colors.white} />
+                    ) : (
+                        <>
+                            <MaterialCommunityIcons name="download" size={20} color={Colors.white} />
+                            <Text style={styles.buttonText}>Download</Text>
+                        </>
+                    )}
+                </TouchableOpacity>
+            </View>
         </View>
     );
 
@@ -252,13 +298,23 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#666',
     },
-    downloadButton: {
+    buttonContainer: {
+        flexDirection: 'row',
+        gap: 12,
+    },
+    actionButton: {
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 12,
         borderRadius: 8,
         gap: 8,
+    },
+    viewButton: {
+        backgroundColor: '#4CAF50',
+    },
+    downloadButton: {
         backgroundColor: Colors.primary,
     },
     buttonText: {

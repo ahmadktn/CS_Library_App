@@ -42,7 +42,7 @@ export default function CourseListScreen() {
         navigation.navigate('DocumentList', {
             courseCode: course.code,
             courseTitle: course.title,
-            documents: [{ name: course.title, fileSource: course.fileSource }],
+            documents: course.documents,
         });
     };
 

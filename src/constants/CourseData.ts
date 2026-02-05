@@ -29,31 +29,31 @@ export const COURSE_DATA: LevelData[] = [
                 documents: [
                     { 
                         name: 'Course Material', 
-                        fileSource: require('../assets/courses/100/MTH1311_sample.txt') 
+                        fileSource: require('../assets/courses/100/mth1311/MTH_1311.pdf') 
                     },
                 ]
             },
             { 
-                id: 'STA1311', 
-                code: 'STA 1311', 
+                id: 'STA111', 
+                code: 'STA 111', 
                 title: 'Probability I', 
                 semester: 1, 
                 documents: [
                     { 
                         name: 'Course Material', 
-                        fileSource: require('../assets/courses/100/STA1311_sample.txt') 
+                        fileSource: require('../assets/courses/100/sta111/STA_111_COMPLETE.pdf') 
                     },
                 ]
             },
             { 
-                id: 'CHM1311', 
-                code: 'CHM 1311', 
-                title: 'Inorganic Chemistry', 
+                id: 'COS103', 
+                code: 'COS 103', 
+                title: 'Computer Hardware And Pheriperals', 
                 semester: 1, 
                 documents: [
                     { 
                         name: 'Course Material', 
-                        fileSource: require('../assets/courses/100/CHM1311_sample.txt') 
+                        fileSource: require('../assets/courses/100/cos103/COS_103_LN1.pdf') 
                     },
                 ]
             },
@@ -77,7 +77,7 @@ export const COURSE_DATA: LevelData[] = [
                 documents: [
                     { 
                         name: 'Course Material', 
-                        fileSource: require('../assets/courses/100/PHY1311_sample.txt') 
+                        fileSource: require('../assets/courses/100/phy1311/PHY_101_Lecture_note.pdf') 
                     },
                 ]
             },
@@ -127,7 +127,7 @@ export const COURSE_DATA: LevelData[] = [
                 documents: [
                     { 
                         name: 'Course Material', 
-                        fileSource: require('../assets/courses/100/CSC1302_sample.txt') 
+                        fileSource: require('../assets/courses/100/csc1302/CSC_1302_UMYU_1.pdf') 
                     },
                 ]
             },
@@ -138,9 +138,13 @@ export const COURSE_DATA: LevelData[] = [
                 semester: 2, 
                 documents: [
                     { 
-                        name: 'Course Material', 
-                        fileSource: require('../assets/courses/100/MTH1302_sample.txt') 
+                        name: 'Course Material 1', 
+                        fileSource: require('../assets/courses/100/mth1302/Diff_Eq_AIO_Notes.pdf') 
                     },
+                    {
+                        name: 'Course Material 2',
+                        fileSource: require('../assets/courses/100/mth1302/Diff_Eq_AIO_Notes_2.pdf')
+                    }
                 ]
             },
             { 
@@ -175,7 +179,7 @@ export const COURSE_DATA: LevelData[] = [
                 documents: [
                     { 
                         name: 'Course Material', 
-                        fileSource: require('../assets/courses/100/PHY1302_sample.txt') 
+                        fileSource: require('../assets/courses/100/phy1302/Physics_TQ.pdf') 
                     },
                 ]
             },
@@ -228,8 +232,8 @@ export const COURSE_DATA: LevelData[] = [
                 semester: 1, 
                 documents: [
                     { 
-                        name: 'Course Material', 
-                        fileSource: require('../assets/courses/200/CSC2311_sample.txt') 
+                        name: 'C++ Complete', 
+                        fileSource: require('../assets/courses/200/csc2311/C++_COMPLETE.pdf') 
                     },
                 ]
             },
@@ -529,7 +533,7 @@ export const COURSE_DATA: LevelData[] = [
                     },
                     { 
                         name: 'Lecture Notes', 
-                        fileSource: require('../assets/courses/300/csc3317/CSC_3317_Lecture_Note.pdf') 
+                        fileSource: require('../assets/courses/300/csc3317/CSC_3317_LectureNotes.pdf') 
                     },
                     { 
                         name: 'Lecture Notes 5', 
@@ -671,9 +675,25 @@ export const COURSE_DATA: LevelData[] = [
                 title: 'Software Engineering', 
                 semester: 1, 
                 documents: [
+                    {
+                        name: 'Lecture Note I',
+                        fileSource: require('../assets/courses/400/csc4311/CSC_4311_PART_1.pdf')
+                    },
                     { 
-                        name: 'Part 2 Presentation', 
+                        name: 'Lecture Note 2', 
                         fileSource: require('../assets/courses/400/csc4311/CSC_4311_PART_2.pptx') 
+                    },
+                    {
+                        name: 'Lecture Note 3',
+                        fileSource: require('../assets/courses/400/csc4311/CSC_4311_PART_3.pptx')
+                    },
+                    {
+                        name: 'Lecture Note 4',
+                        fileSource: require('../assets/courses/400/csc4311/CSC_4311_PART_4.pdf')
+                    },
+                    {
+                        name: 'Lecture Note 5',
+                        fileSource: require('../assets/courses/400/csc4311/CSC_4311_PART_5.pdf')
                     },
                     { 
                         name: 'Software Engineering Guide', 
@@ -691,6 +711,26 @@ export const COURSE_DATA: LevelData[] = [
                         name: 'Introduction to AI', 
                         fileSource: require('../assets/courses/400/csc4313/Introduction_to_Artificial_Intelligence.pptx') 
                     },
+                    {
+                        name: 'Introduction to Machine Learning',
+                        fileSource: require('../assets/courses/400/csc4313/Introduction_to_ML.pptx')
+                    },
+                    {
+                        name: 'Introduction to Prolog',
+                        fileSource: require('../assets/courses/400/csc4313/Introduction_to_Prolog.pptx')
+                    },
+                    {
+                        name: 'Knowledge Reasoning',
+                        fileSource: require('../assets/courses/400/csc4313/Knowledge_Reasoning.pptx')
+                    },
+                    {
+                        name: 'Knowledge Representation',
+                        fileSource: require('../assets/courses/400/csc4313/Knowledge_Representation.pptx')
+                    },
+                    {
+                        name: 'Informed Search',
+                        fileSource: require('../assets/courses/400/csc4313/Informed_Search.pptx')
+                    },
                 ]
             },
             { 
@@ -699,9 +739,29 @@ export const COURSE_DATA: LevelData[] = [
                 title: 'Operating System II', 
                 semester: 1, 
                 documents: [
+                    {
+                        name: 'Lecture Note I',
+                        fileSource: require('../assets/courses/400/csc4301/1_Operating_System_Lecture_Note_I.pdf')
+                    },
                     { 
                         name: 'Lecture Note II', 
                         fileSource: require('../assets/courses/400/csc4301/2_Operating_Systems_Lecture_Note_II.pdf') 
+                    },
+                    {
+                        name: 'Lecture Note III',
+                        fileSource: require('../assets/courses/400/csc4301/3_Operating_Systems_Lecture_Note_III.pdf')
+                    },
+                    {
+                        name: 'Lecture Note IV',
+                        fileSource: require('../assets/courses/400/csc4301/4_Operating_Systems_Lecture_Note_IV.pdf')
+                    },
+                    {
+                        name: 'Lecture Note V',
+                        fileSource: require('../assets/courses/400/csc4301/5_Operating_Systems_Lecture_Note_V.pdf')
+                    },
+                    {
+                        name: 'Lecture Note VI',
+                        fileSource: require('../assets/courses/400/csc4301/6_Operating_Systems_Lecture_Note_VI.pdf')
                     },
                     { 
                         name: 'Chapter 4', 
@@ -742,8 +802,8 @@ export const COURSE_DATA: LevelData[] = [
                 semester: 2, 
                 documents: [
                     { 
-                        name: 'Course Material', 
-                        fileSource: require('../assets/courses/400/CSC4302_sample.txt') 
+                        name: 'Lecture Note I', 
+                        fileSource: require('../assets/courses/400/csc4302/lecture_Week_1.pdf') 
                     },
                 ]
             },
